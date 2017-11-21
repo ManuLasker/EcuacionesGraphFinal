@@ -1,0 +1,171 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RungeKutta &#8212; Graficadora de Ecuaciones Diferenciales 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for RungeKutta</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">Metodo</span> <span class="k">import</span> <span class="n">Metodo</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">bokeh.layouts</span> <span class="k">import</span> <span class="n">gridplot</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="k">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">save</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="k">import</span> <span class="n">Range1d</span>
+<span class="kn">from</span> <span class="nn">bokeh.embed</span> <span class="k">import</span> <span class="n">components</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> \
+    <span class="n">cosh</span><span class="p">,</span> <span class="n">sinh</span><span class="p">,</span> <span class="n">tanh</span><span class="p">,</span> <span class="n">arccos</span><span class="p">,</span> <span class="n">arcsin</span><span class="p">,</span> <span class="nb">abs</span><span class="p">,</span> <span class="n">arctan</span>
+<span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="rungeKutta"><a class="viewcode-back" href="../RungeKutta.html#RungeKutta.rungeKutta">[docs]</a><span class="k">class</span> <span class="nc">rungeKutta</span><span class="p">(</span><span class="n">Metodo</span><span class="p">):</span>
+
+    <span class="n">__div</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">__script</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">__p1</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametros</span><span class="p">,</span> <span class="n">figura</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Metodo</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametros</span><span class="p">,</span> <span class="n">figura</span><span class="p">)</span>
+
+<div class="viewcode-block" id="rungeKutta.hallarSolucion"><a class="viewcode-back" href="../RungeKutta.html#RungeKutta.rungeKutta.hallarSolucion">[docs]</a>    <span class="k">def</span> <span class="nf">hallarSolucion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates lines for Euler&#39;s method plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParametros</span><span class="p">()</span>
+        <span class="n">TOOLS</span> <span class="o">=</span> <span class="s2">&quot;pan,wheel_zoom,box_zoom,reset,save,box_select&quot;</span>
+        <span class="c1"># Step size, the smaller the better, however it may take longer to compute</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>
+        <span class="n">new_x</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">]</span>
+        <span class="n">new_y</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;y0&#39;</span><span class="p">]</span>
+        <span class="n">ymargin</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;yMax&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;yMin&#39;</span><span class="p">])</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">new_x</span> <span class="o">&lt;</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;xMax&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">delta</span> <span class="ow">and</span>
+                               <span class="n">form</span><span class="p">[</span><span class="s1">&#39;yMin&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">ymargin</span> <span class="o">&lt;</span> <span class="n">new_y</span> <span class="o">&lt;</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;yMax&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">ymargin</span><span class="p">):</span>
+
+            <span class="n">old_x</span> <span class="o">=</span> <span class="n">new_x</span>
+            <span class="n">old_y</span> <span class="o">=</span> <span class="n">new_y</span>
+            <span class="c1"># Compute derivative.  Could be bad, so abort with results so far if a</span>
+            <span class="c1"># Division by zero or NaN occurs.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">old_x</span><span class="p">,</span> <span class="n">old_y</span><span class="p">)</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">old_x</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">delta</span><span class="p">,</span> <span class="n">old_y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">delta</span><span class="o">*</span><span class="n">k1</span><span class="p">)</span>
+                <span class="n">k3</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">old_x</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">delta</span><span class="p">,</span> <span class="n">old_y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">delta</span><span class="o">*</span><span class="n">k2</span><span class="p">)</span>
+                <span class="n">k4</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">old_x</span> <span class="o">+</span> <span class="n">delta</span><span class="p">,</span> <span class="n">old_y</span> <span class="o">+</span> <span class="n">delta</span><span class="o">*</span><span class="n">k3</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ArithmeticError</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">k1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">k2</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">k3</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">k4</span><span class="p">):</span>
+                <span class="k">break</span>
+
+            <span class="n">new_x</span> <span class="o">=</span> <span class="n">old_x</span> <span class="o">+</span> <span class="n">delta</span>
+            <span class="c1"># print &quot;new_t = &quot; + str(new_t)</span>
+            <span class="n">new_y</span> <span class="o">=</span> <span class="n">old_y</span> <span class="o">+</span> <span class="p">((</span><span class="n">k1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">k2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">k3</span><span class="o">+</span><span class="n">k4</span><span class="p">)</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span>
+            <span class="c1"># plt.plot(old_t,yp)</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old_x</span><span class="p">)</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old_y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">old_x</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;xMax&#39;</span><span class="p">]:</span>
+                <span class="k">break</span>
+
+        <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFigura</span><span class="p">()</span>
+        <span class="n">p1</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">],</span> <span class="n">form</span><span class="p">[</span><span class="s1">&#39;y0&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">fill_color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">p1</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">script</span><span class="p">,</span> <span class="n">div</span> <span class="o">=</span> <span class="n">components</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__p1</span> <span class="o">=</span> <span class="n">p1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__div</span> <span class="o">=</span> <span class="n">div</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__script</span> <span class="o">=</span> <span class="n">script</span></div>
+
+<div class="viewcode-block" id="rungeKutta.getDiv"><a class="viewcode-back" href="../RungeKutta.html#RungeKutta.rungeKutta.getDiv">[docs]</a>    <span class="k">def</span> <span class="nf">getDiv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the valuf of __div</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__div</span></div>
+
+<div class="viewcode-block" id="rungeKutta.getScript"><a class="viewcode-back" href="../RungeKutta.html#RungeKutta.rungeKutta.getScript">[docs]</a>    <span class="k">def</span> <span class="nf">getScript</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns the value of __script</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__script</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Yo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

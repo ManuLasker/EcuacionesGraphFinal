@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>views &#8212; Graficadora de Ecuaciones Diferenciales 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">render_to_response</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="k">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">show</span>
+<span class="kn">from</span> <span class="nn">bokeh.embed</span> <span class="k">import</span> <span class="n">components</span>
+<span class="kn">from</span> <span class="nn">django.http.request</span> <span class="k">import</span> <span class="n">HttpRequest</span>
+
+<span class="kn">from</span> <span class="nn">RungeKutta</span> <span class="k">import</span>  <span class="n">rungeKutta</span>
+<span class="kn">from</span> <span class="nn">WebParameter</span> <span class="k">import</span> <span class="n">webParameter</span>
+<span class="kn">from</span> <span class="nn">Graficador</span> <span class="k">import</span> <span class="n">Graficador</span>
+<span class="kn">from</span> <span class="nn">EulerMejorado</span> <span class="k">import</span> <span class="n">eulerMejorado</span>
+<span class="kn">from</span> <span class="nn">MetodoEuler</span> <span class="k">import</span> <span class="n">MetodoEuler</span>
+<span class="kn">from</span> <span class="nn">CampoDireccional</span> <span class="k">import</span> <span class="n">CampoDirecciones</span>
+
+
+<div class="viewcode-block" id="views"><a class="viewcode-back" href="../views.html#views.views">[docs]</a><span class="k">class</span> <span class="nc">views</span><span class="p">:</span>
+
+    <span class="n">__webData</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">__Graficador</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="views.getWebData"><a class="viewcode-back" href="../views.html#views.views.getWebData">[docs]</a>    <span class="k">def</span> <span class="nf">getWebData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the value of __webData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__webData</span></div>
+
+    <span class="c1"># Create your views here.</span>
+<div class="viewcode-block" id="views.home"><a class="viewcode-back" href="../views.html#views.views.home">[docs]</a>    <span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends the neccesary data to show in web app.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">parametros</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+        <span class="n">figura</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># print parametros</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;xMin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;xMax&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s1">&#39;yMin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;yMax&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;y0&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;fd_str&#39;</span><span class="p">:</span> <span class="s1">&#39;2*y/tan(2*x)&#39;</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">parametros</span><span class="p">):</span>
+
+            <span class="c1"># Creates webData with its parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__webData</span> <span class="o">=</span> <span class="n">webParameter</span><span class="p">(</span><span class="n">parametros</span><span class="p">)</span>
+            <span class="c1"># Obtains data</span>
+            <span class="n">dataWeb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__webData</span><span class="o">.</span><span class="n">obteniendoDatos</span><span class="p">()</span>
+            <span class="c1"># print(self.__webData.obteniendoDatos())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__Graficador</span> <span class="o">=</span> <span class="n">Graficador</span><span class="p">(</span><span class="n">parametros</span><span class="p">)</span>
+            <span class="c1"># Args gets the dictionary </span>
+            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__Graficador</span><span class="o">.</span><span class="n">getPd</span><span class="p">()</span>
+            <span class="c1"># print(args)</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="s1">&#39;error&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="c1"># create TOOLS for the plugin</span>
+                <span class="n">TOOLS</span> <span class="o">=</span> <span class="s2">&quot;pan,wheel_zoom,box_zoom,reset,save,box_select&quot;</span>
+                <span class="c1"># create figure fot the plot</span>
+                <span class="n">figura</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;f&#39;(x,y) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;fd_str&#39;</span><span class="p">]),</span> <span class="n">plot_width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+                                <span class="n">plot_height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">TOOLS</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;xMin&#39;</span><span class="p">]</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;xMax&#39;</span><span class="p">]),</span>
+                                <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;yMin&#39;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;yMax&#39;</span><span class="p">]))</span>
+                <span class="c1"># plot with differents methods</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;metodo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;euler&#39;</span><span class="p">):</span>
+                    <span class="n">eulerMethod</span> <span class="o">=</span> <span class="n">MetodoEuler</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="n">figura</span><span class="p">)</span>
+                    <span class="n">eulerMethod</span><span class="o">.</span><span class="n">hallarSolucion</span><span class="p">()</span>
+                    <span class="n">figura</span> <span class="o">=</span> <span class="n">eulerMethod</span><span class="o">.</span><span class="n">getFigura</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;metodo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;eulerMejor&#39;</span><span class="p">):</span>
+                    <span class="n">eulerBest</span> <span class="o">=</span> <span class="n">eulerMejorado</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="n">figura</span><span class="p">)</span>
+                    <span class="n">eulerBest</span><span class="o">.</span><span class="n">hallarSolucion</span><span class="p">()</span>
+                    <span class="n">figura</span> <span class="o">=</span> <span class="n">eulerBest</span><span class="o">.</span><span class="n">getFigura</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;metodo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;rungeKutta&#39;</span><span class="p">):</span>
+                    <span class="n">rungeSolve</span> <span class="o">=</span> <span class="n">rungeKutta</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="n">figura</span><span class="p">)</span>
+                    <span class="n">rungeSolve</span><span class="o">.</span><span class="n">hallarSolucion</span><span class="p">()</span>
+                    <span class="n">figura</span> <span class="o">=</span> <span class="n">rungeSolve</span><span class="o">.</span><span class="n">getFigura</span><span class="p">()</span>
+                <span class="c1"># obtained figure</span>
+
+                <span class="n">campoGrafica</span> <span class="o">=</span> <span class="n">CampoDirecciones</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="n">figura</span><span class="p">)</span>
+                <span class="n">campoGrafica</span><span class="o">.</span><span class="n">hallarCampoDirecciones</span><span class="p">()</span>
+                <span class="c1"># adding the html form of the plotting to the args</span>
+                <span class="n">args</span><span class="p">[</span><span class="s1">&#39;divCampo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">campoGrafica</span><span class="o">.</span><span class="n">getDiv</span><span class="p">()</span>
+                <span class="n">args</span><span class="p">[</span><span class="s1">&#39;scripCampo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">campoGrafica</span><span class="o">.</span><span class="n">getScript</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;Graph/page.html&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Yo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Funcion module &#8212; Graficadora de Ecuaciones Diferenciales 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Graficador module" href="Graficador.html" />
+    <link rel="prev" title="EulerMejorado module" href="EulerMejorado.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Graficador.html" title="Graficador module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="EulerMejorado.html" title="EulerMejorado module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Funcion">
+<span id="funcion-module"></span><h1>Funcion module<a class="headerlink" href="#module-Funcion" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Funcion.FuncionDiff">
+<em class="property">class </em><code class="descclassname">Funcion.</code><code class="descname">FuncionDiff</code><span class="sig-paren">(</span><em>fn_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns the users input into a valid mathematical function.</p>
+<dl class="method">
+<dt id="Funcion.FuncionDiff.ObtenerFuncionDiferencial">
+<code class="descname">ObtenerFuncionDiferencial</code><span class="sig-paren">(</span><em>fn_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff.ObtenerFuncionDiferencial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff.ObtenerFuncionDiferencial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diferential function
+input is taken and turned into a mathematical function.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Funcion.FuncionDiff.VALID_INPUT">
+<code class="descname">VALID_INPUT</code><em class="property"> = ['', 'sin', 'cos', 'tan', 'x', 'y', 'abs', 'sqrt', 'e', 'pi', 'log', 'ln', 'acos', 'asin', 'atan', 'cosh', 'sinh', 'tanh', 'arcsin', 'arctan', 'arccos']</em><a class="headerlink" href="#Funcion.FuncionDiff.VALID_INPUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Funcion.FuncionDiff.convertir_Fn_str_enFuncionMatematica">
+<code class="descname">convertir_Fn_str_enFuncionMatematica</code><span class="sig-paren">(</span><em>fn_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff.convertir_Fn_str_enFuncionMatematica"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff.convertir_Fn_str_enFuncionMatematica" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns input into a mathematical function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Funcion.FuncionDiff.getError">
+<code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff.getError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff.getError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of __error</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Funcion.FuncionDiff.getFn">
+<code class="descname">getFn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff.getFn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff.getFn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of __fn_str.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Funcion.FuncionDiff.setError">
+<code class="descname">setError</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Funcion.html#FuncionDiff.setError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Funcion.FuncionDiff.setError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of __error</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="EulerMejorado.html"
+                        title="previous chapter">EulerMejorado module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Graficador.html"
+                        title="next chapter">Graficador module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Graficador.html" title="Graficador module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="EulerMejorado.html" title="EulerMejorado module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Graficadora de Ecuaciones Diferenciales 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Yo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>
